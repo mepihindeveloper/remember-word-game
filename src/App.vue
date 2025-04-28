@@ -3,21 +3,32 @@ import StandardButton from '@/components/StandardButton.vue'
 import Score from "@/components/Score.vue";
 import Card from "@/components/Card.vue";
 
-const score = 100;
+const scorePoints = 100;
 const cardData = {
   number: '01',
   text: 'unadmitted',
   status: undefined
+}
+
+function onFlip() {
+  console.log('Flip event')
+}
+function onChangeStatus(status) {
+  console.log(status)
 }
 </script>
 
 <template>
   <header class="header">
     <h1 class="title">Запомни слово</h1>
-    <score :score />
+    <score v-bind:score="scorePoints" />
   </header>
   <main class="main">
-    <card v-bind="cardData" />
+    <card
+      v-bind="cardData"
+      @flip="onFlip"
+      @change-status="onChangeStatus"
+    />
     <standard-button>Начать игру</standard-button>
   </main>
 
