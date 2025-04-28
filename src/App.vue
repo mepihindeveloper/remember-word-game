@@ -2,15 +2,22 @@
 import StandardButton from '@/components/StandardButton.vue'
 import Score from "@/components/Score.vue";
 import Card from "@/components/Card.vue";
+
+const score = 100;
+const cardData = {
+  number: '01',
+  text: 'unadmitted',
+  status: undefined
+}
 </script>
 
 <template>
   <header class="header">
     <h1 class="title">Запомни слово</h1>
-    <score />
+    <score :score />
   </header>
   <main class="main">
-    <card/>
+    <card v-bind="cardData" />
     <standard-button>Начать игру</standard-button>
   </main>
 

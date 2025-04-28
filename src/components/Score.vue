@@ -1,7 +1,7 @@
 <script setup>
 import HeartIcon from "@/components/icons/HeartIcon.vue";
 
-const props = defineProps({
+const { score } = defineProps({
   score: {
     type: Number,
     default: 100,
@@ -10,7 +10,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <button class="score-button"> {{ props.score }} <heart-icon></heart-icon></button>
+  <button class="score-button"> {{ score }} <heart-icon></heart-icon></button>
 </template>
 
 <style scoped>

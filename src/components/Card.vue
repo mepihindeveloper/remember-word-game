@@ -1,7 +1,11 @@
 <script setup>
 import FailIcon from "@/components/icons/FailIcon.vue";
 import SuccessIcon from "@/components/icons/SuccessIcon.vue";
-
+const props = defineProps({
+  number: String,
+  text: String,
+  status: Boolean|undefined,
+})
 const emit = defineEmits(['flip', 'change-status'])
 function flip() {
   emit('flip')
@@ -14,7 +18,7 @@ function changeStatus(status) {
 <template>
   <div class="card">
     <div class="card__body">
-      <div class="card__number">01</div>
+      <div class="card__number">{{ props.number }}</div>
       <div class="card__status">
         <fail-icon />
         <success-icon />
@@ -23,7 +27,7 @@ function changeStatus(status) {
         <fail-icon class="large" />
         <success-icon class="large" />
       </div>
-      <div class="card-body__word">unadmitted</div>
+      <div class="card-body__word">{{ props.text }}</div>
       <div class="card__actions">
         <button class="card__actions__flip" @click="flip">Перевернуть</button>
         <div class="card__actions__change-status">
