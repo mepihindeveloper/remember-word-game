@@ -6,6 +6,7 @@
 
   --color-white: #FFFFFF;
   --color-black: #000000;
+  --color-black-light: #222222;
 
   --color-success: #09BB00;
   --color-error: #D00303;
@@ -31,7 +32,5 @@ body {
   color: var(--color-primary);
 
   display: grid;
-  place-items: center;
-  align-content: center;
   min-height: 100vh;
 }

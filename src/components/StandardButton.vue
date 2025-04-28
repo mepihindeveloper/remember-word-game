@@ -9,7 +9,6 @@
 
 <style scoped>
   .button {
-
     width: 335px;
     border: none;
     border-radius: 100px;
