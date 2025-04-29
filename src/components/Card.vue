@@ -1,7 +1,8 @@
 <script setup>
 import FailIcon from "@/components/icons/FailIcon.vue";
 import SuccessIcon from "@/components/icons/SuccessIcon.vue";
-const { number, text, status } = defineProps({
+import StandardButton from "@/components/StandardButton.vue";
+defineProps({
   number: {
     type: String,
     default: '00',
@@ -48,8 +49,8 @@ function changeStatus(status) {
       <div class="card__actions">
         <button class="card__actions__flip" @click="flip">Перевернуть</button>
         <div class="card__actions__change-status">
-          <fail-icon @click="changeStatus(false)" />
-          <success-icon @click="changeStatus(true)" />
+          <button><fail-icon @click="changeStatus(false)" /></button>
+          <button><success-icon @click="changeStatus(true)" /></button>
         </div>
       </div>
     </div>
@@ -112,7 +113,7 @@ function changeStatus(status) {
   display: flex;
   justify-content: center;
   position: absolute;
-  bottom: -11px;
+  bottom: -16px;
 }
 .card__actions__flip {
   background: none;
@@ -131,5 +132,10 @@ function changeStatus(status) {
   justify-content: space-between;
   align-items: center;
   gap: 32px;
+}
+.card__actions__change-status button {
+  border: 0;
+  background: none;
+  cursor: pointer;
 }
 </style>

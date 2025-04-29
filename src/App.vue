@@ -5,13 +5,15 @@ import Card from "@/components/Card.vue";
 import {ref} from "vue";
 
 const scorePoints = ref(100);
-const cardData = ref({
-  word: 'unadmitted',
-  translation: 'непризнанный',
-  state: 'closed',
-  status: 'pending',
-  number: '01',
-})
+const cards = ref([
+  {
+    word: 'unadmitted',
+    translation: 'непризнанный',
+    state: 'closed',
+    status: 'pending',
+    number: '01',
+  },
+])
 
 function onFlip() {
   console.log('Flip event')
@@ -28,7 +30,7 @@ function onChangeStatus(status) {
   </header>
   <main class="main">
     <card
-      v-bind="cardData"
+      v-bind="cards[0]"
       @flip="onFlip"
       @change-status="onChangeStatus"
     />
