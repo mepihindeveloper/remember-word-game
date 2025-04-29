@@ -2,13 +2,16 @@
 import StandardButton from '@/components/StandardButton.vue'
 import Score from "@/components/Score.vue";
 import Card from "@/components/Card.vue";
+import {ref} from "vue";
 
-const scorePoints = 100;
-const cardData = {
+const scorePoints = ref(100);
+const cardData = ref({
+  word: 'unadmitted',
+  translation: 'непризнанный',
+  state: 'closed',
+  status: 'pending',
   number: '01',
-  text: 'unadmitted',
-  status: undefined
-}
+})
 
 function onFlip() {
   console.log('Flip event')

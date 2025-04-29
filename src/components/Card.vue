@@ -6,13 +6,21 @@ const { number, text, status } = defineProps({
     type: String,
     default: '00',
   },
-  text: {
+  word: {
+    type: String,
+    default: '',
+  },
+  translation: {
     type: String,
     default: '',
   },
   status: {
-    type: Boolean|null,
-    default: null,
+    type: String,
+    default: 'pending',
+  },
+  state: {
+    type: String,
+    default: 'closed',
   },
 })
 const emit = defineEmits(['flip', 'change-status'])
@@ -36,7 +44,7 @@ function changeStatus(status) {
         <fail-icon class="large" />
         <success-icon class="large" />
       </div>
-      <div class="card-body__word">{{ text }}</div>
+      <div class="card-body__word">{{ word }}</div>
       <div class="card__actions">
         <button class="card__actions__flip" @click="flip">Перевернуть</button>
         <div class="card__actions__change-status">
