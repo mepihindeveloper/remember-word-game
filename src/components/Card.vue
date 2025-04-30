@@ -52,8 +52,8 @@ function changeStatus(status) {
       <div class="card__actions">
         <button v-if="state === 'closed'" class="card__actions__flip" @click="flip">Перевернуть</button>
         <div v-else class="card__actions__change-status">
-          <button><fail-icon @click="changeStatus(false)" /></button>
-          <button><success-icon @click="changeStatus(true)" /></button>
+          <button><fail-icon @click="changeStatus('failed')" /></button>
+          <button><success-icon @click="changeStatus('success')" /></button>
         </div>
       </div>
     </div>

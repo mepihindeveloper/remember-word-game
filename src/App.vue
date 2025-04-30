@@ -55,7 +55,6 @@ function onChangeStatus(status) {
         v-for="card in cards"
         :key="card.number"
         v-bind="card"
-        v-model:statusModel="card.status"
         @flip="onFlip"
         @change-status="onChangeStatus"
       />
