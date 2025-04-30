@@ -2,7 +2,14 @@
 import FailIcon from "@/components/icons/FailIcon.vue";
 import SuccessIcon from "@/components/icons/SuccessIcon.vue";
 import StandardButton from "@/components/StandardButton.vue";
-defineProps({
+import {ref} from "vue";
+const {
+  number,
+  word,
+  translation,
+  status,
+  state,
+} = defineProps({
   number: {
     type: String,
     default: '00',
@@ -26,7 +33,7 @@ defineProps({
 })
 const emit = defineEmits(['flip', 'change-status'])
 function flip() {
-  emit('flip')
+  emit('flip', state === 'closed' ? 'opened' : 'closed')
 }
 function changeStatus(status) {
   emit('change-status', status)
@@ -37,18 +44,14 @@ function changeStatus(status) {
   <div class="card">
     <div class="card__body">
       <div class="card__number">{{ number }}</div>
-      <div class="card__status">
-        <fail-icon />
-        <success-icon />
+      <div v-if="status === 'failed' || status === 'success'" class="card__status large">
+        <fail-icon v-if="status === 'failed'" class="large" />
+        <success-icon v-else class="large" />
       </div>
-      <div class="card__status large">
-        <fail-icon class="large" />
-        <success-icon class="large" />
-      </div>
-      <div class="card-body__word">{{ word }}</div>
+      <div class="card-body__word">{{ state === 'closed' ? word : translation }}</div>
       <div class="card__actions">
-        <button class="card__actions__flip" @click="flip">Перевернуть</button>
-        <div class="card__actions__change-status">
+        <button v-if="state === 'closed'" class="card__actions__flip" @click="flip">Перевернуть</button>
+        <div v-else class="card__actions__change-status">
           <button><fail-icon @click="changeStatus(false)" /></button>
           <button><success-icon @click="changeStatus(true)" /></button>
         </div>
@@ -64,6 +67,7 @@ function changeStatus(status) {
   box-shadow: 0 0 16px 0 #0000001A;
   padding: 28px 19px;
   position: relative;
+  width: 250px;
 }
 .card__number {
   position: absolute;
