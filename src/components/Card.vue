@@ -51,6 +51,7 @@ function changeStatus(status) {
       <div class="card-body__word">{{ state === 'closed' ? word : translation }}</div>
       <div class="card__actions">
         <button v-if="state === 'closed'" class="card__actions__flip" @click="flip">Перевернуть</button>
+        <button v-else-if="state === 'opened' && (status === 'failed' || status === 'success')" class="card__actions__finished">Завершено</button>
         <div v-else class="card__actions__change-status">
           <button><fail-icon @click="changeStatus('failed')" /></button>
           <button><success-icon @click="changeStatus('success')" /></button>
@@ -118,8 +119,9 @@ function changeStatus(status) {
   justify-content: center;
   position: absolute;
   bottom: -16px;
+  height: 30px;
 }
-.card__actions__flip {
+.card__actions__flip, .card__actions__finished {
   background: none;
   border: none;
   font-family: var(--font);
@@ -129,6 +131,9 @@ function changeStatus(status) {
   color: var(--color-black);
   text-transform: uppercase;
   cursor: pointer;
+}
+.card__actions__finished {
+  cursor: context-menu;
 }
 .card__actions__change-status {
   display: flex;
