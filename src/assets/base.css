@@ -1,0 +1,36 @@
+:root {
+  --color-primary: #008BFE;
+  --color-primary-inverted: #006FCB;
+  --color-primary-light: #CCE8FF;
+  --color-bg: #F0F4F8;
+
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-black-light: #222222;
+
+  --color-success: #09BB00;
+  --color-error: #D00303;
+
+  --font: "Roboto", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  font-family: var(--font);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-bg);
+  color: var(--color-primary);
+
+  display: grid;
+  min-height: 100vh;
+}
