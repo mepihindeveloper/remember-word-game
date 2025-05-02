@@ -2,45 +2,48 @@
 import StandardButton from '@/components/StandardButton.vue'
 import Score from "@/components/Score.vue";
 import Card from "@/components/Card.vue";
-import {ref} from "vue";
+import {computed, onMounted, ref} from "vue";
+
+const API_ENDPOINT = 'http://localhost:8080/api'
 
 const scorePoints = ref(100);
-const cards = ref([
-  {
-    word: 'word 1',
-    translation: 'слово 1',
-    state: 'closed',
-    status: 'pending',
-    number: '01',
-  },
-  {
-    word: 'word 2',
-    translation: 'слово 2',
-    state: 'opened',
-    status: 'pending',
-    number: '02',
-  },
-  {
-    word: 'word 3',
-    translation: 'слово 3',
-    state: 'opened',
-    status: 'success',
-    number: '03',
-  },
-  {
-    word: 'word 4',
-    translation: 'слово 4',
-    state: 'opened',
-    status: 'failed',
-    number: '04',
-  },
-])
+const data = ref([])
+
+const cards = computed(() => {
+  if (!data.value) {
+    return [];
+  }
+  let cards_list = [];
+  for (const [key, value] of Object.entries(data.value)) {
+    cards_list.push({
+      word: value.word,
+      translation: value.translation,
+      state: 'closed',
+      status: 'pending',
+      number: key < 10 ? `0${key}` : key,
+    })
+  }
+  return cards_list;
+})
 
 function onFlip(newState) {
   console.log('Flip event', newState)
 }
 function onChangeStatus(status) {
   console.log(status)
+}
+
+async function start() {
+  const response = await fetch(`${API_ENDPOINT}/random-words`)
+  if (response.status !== 200) {
+    data.value = [];
+    return
+  }
+  data.value = await response.json()
+}
+
+function replay() {
+
 }
 </script>
 
@@ -50,7 +53,7 @@ function onChangeStatus(status) {
     <score v-bind:score="scorePoints" />
   </header>
   <main class="main">
-    <div class="cards">
+    <div v-if="cards.length" class="cards">
       <card
         v-for="card in cards"
         :key="card.number"
@@ -59,7 +62,8 @@ function onChangeStatus(status) {
         @change-status="onChangeStatus"
       />
     </div>
-    <standard-button>Начать игру</standard-button>
+    <standard-button v-if="!cards.length" @click="start">Начать игру</standard-button>
+    <standard-button v-else @click="replay">Начать заново</standard-button>
   </main>
 
 </template>
