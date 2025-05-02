@@ -26,7 +26,12 @@ function onChangeStatus(word, status) {
   }
 }
 
-onMounted( async () => {
+function start() {
+  getData()
+  scorePoints.value = 100;
+}
+
+async function getData() {
   const response = await fetch(`${API_ENDPOINT}/random-words`)
   if (response.status !== 200) {
     data.value = [];
@@ -36,10 +41,10 @@ onMounted( async () => {
   for (const [key, value] of Object.entries(data.value)) {
     let number = parseInt(key) + 1;
     value.number = key < 10 ? `0${number}` : number
-    value.state = ref('closed')
-    value.status = ref('pending')
+    value.state = 'closed'
+    value.status = 'pending'
   }
-})
+}
 </script>
 
 <template>
@@ -57,8 +62,8 @@ onMounted( async () => {
         @change-status="onChangeStatus"
       />
     </div>
-    <standard-button v-if="!data.length">Начать игру</standard-button>
-    <standard-button v-else>Начать заново</standard-button>
+    <standard-button v-if="!data.length" @click="start">Начать игру</standard-button>
+    <standard-button v-else @click="start">Начать заново</standard-button>
   </main>
 
 </template>
