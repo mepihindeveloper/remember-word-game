@@ -2,49 +2,44 @@
 import StandardButton from '@/components/StandardButton.vue'
 import Score from "@/components/Score.vue";
 import Card from "@/components/Card.vue";
-import {computed, onMounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 
 const API_ENDPOINT = 'http://localhost:8080/api'
 
 const scorePoints = ref(100);
 const data = ref([])
 
-const cards = computed(() => {
-  if (!data.value) {
-    return [];
+function onFlip(word) {
+  for (const card of data.value) {
+    if (card.word !== word) {
+      continue;
+    }
+    card.state = card.state === 'closed' ? 'opened' : 'closed';
   }
-  let cards_list = [];
-  for (const [key, value] of Object.entries(data.value)) {
-    cards_list.push({
-      word: value.word,
-      translation: value.translation,
-      state: 'closed',
-      status: 'pending',
-      number: key < 10 ? `0${key}` : key,
-    })
-  }
-  return cards_list;
-})
-
-function onFlip(newState) {
-  console.log('Flip event', newState)
 }
-function onChangeStatus(status) {
-  console.log(status)
+function onChangeStatus(word, status) {
+  for (const card of data.value) {
+    if (card.word !== word) {
+      continue;
+    }
+    card.status = status;
+  }
 }
 
-async function start() {
+onMounted( async () => {
   const response = await fetch(`${API_ENDPOINT}/random-words`)
   if (response.status !== 200) {
     data.value = [];
     return
   }
   data.value = await response.json()
-}
-
-function replay() {
-
-}
+  for (const [key, value] of Object.entries(data.value)) {
+    let number = parseInt(key) + 1;
+    value.number = key < 10 ? `0${number}` : number
+    value.state = ref('closed')
+    value.status = ref('pending')
+  }
+})
 </script>
 
 <template>
@@ -53,17 +48,17 @@ function replay() {
     <score v-bind:score="scorePoints" />
   </header>
   <main class="main">
-    <div v-if="cards.length" class="cards">
+    <div v-if="data.length" class="cards">
       <card
-        v-for="card in cards"
-        :key="card.number"
+        v-for="card in data"
+        :key="card.word"
         v-bind="card"
         @flip="onFlip"
         @change-status="onChangeStatus"
       />
     </div>
-    <standard-button v-if="!cards.length" @click="start">Начать игру</standard-button>
-    <standard-button v-else @click="replay">Начать заново</standard-button>
+    <standard-button v-if="!data.length">Начать игру</standard-button>
+    <standard-button v-else>Начать заново</standard-button>
   </main>
 
 </template>

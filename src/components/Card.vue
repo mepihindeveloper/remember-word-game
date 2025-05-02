@@ -33,29 +33,29 @@ const {
 })
 const emit = defineEmits(['flip', 'change-status'])
 function flip() {
-  emit('flip', state === 'closed' ? 'opened' : 'closed')
+  emit('flip', word)
 }
 function changeStatus(status) {
-  emit('change-status', status)
+  emit('change-status', word, status)
 }
 </script>
 
 <template>
   <div class="card">
+    <div class="card__number">{{ number }}</div>
+    <div v-if="status === 'failed' || status === 'success'" class="card__status large">
+      <fail-icon v-if="status === 'failed'" class="large" />
+      <success-icon v-else class="large" />
+    </div>
     <div class="card__body">
-      <div class="card__number">{{ number }}</div>
-      <div v-if="status === 'failed' || status === 'success'" class="card__status large">
-        <fail-icon v-if="status === 'failed'" class="large" />
-        <success-icon v-else class="large" />
-      </div>
       <div class="card-body__word">{{ state === 'closed' ? word : translation }}</div>
-      <div class="card__actions">
-        <button v-if="state === 'closed'" class="card__actions__flip" @click="flip">Перевернуть</button>
-        <button v-else-if="state === 'opened' && (status === 'failed' || status === 'success')" class="card__actions__finished">Завершено</button>
-        <div v-else class="card__actions__change-status">
-          <button><fail-icon @click="changeStatus('failed')" /></button>
-          <button><success-icon @click="changeStatus('success')" /></button>
-        </div>
+    </div>
+    <div class="card__actions">
+      <button v-if="state === 'closed'" class="card__actions__flip" @click="flip">Перевернуть</button>
+      <button v-else-if="state === 'opened' && (status === 'failed' || status === 'success')" class="card__actions__finished">Завершено</button>
+      <div v-else class="card__actions__change-status">
+        <button><fail-icon @click="changeStatus('failed')" /></button>
+        <button><success-icon @click="changeStatus('success')" /></button>
       </div>
     </div>
   </div>
@@ -69,11 +69,16 @@ function changeStatus(status) {
   padding: 28px 19px;
   position: relative;
   width: 250px;
+  height: 376px;
+  place-items: center;
+  display: flex;
+  flex-direction: column;
 }
 .card__number {
+  z-index: 1;
   position: absolute;
-  top: -8px;
-  left: 16px;
+  top: 22px;
+  left: 35px;
   font-family: var(--font);
   font-weight: 400;
   font-size: 14px;
@@ -87,23 +92,22 @@ function changeStatus(status) {
   display: flex;
   justify-content: center;
   position: absolute;
-  top: -12px;
+  top: 5px;
   background: var(--color-white);
-}
-.card__status.large {
-  top: -24px;
+  z-index: 1;
 }
 .card__body {
   border: 1px solid var(--color-primary-light);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   position: relative;
+  width: 100%;
+  height: 100%;
 }
 .card-body__word {
-  padding: 177px 0;
   color: var(--color-black);
   font-family: var(--font);
   font-weight: 400;
@@ -118,7 +122,7 @@ function changeStatus(status) {
   display: flex;
   justify-content: center;
   position: absolute;
-  bottom: -16px;
+  bottom: 12px;
   height: 30px;
 }
 .card__actions__flip, .card__actions__finished {
