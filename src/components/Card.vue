@@ -1,8 +1,14 @@
 <script setup>
 import FailIcon from "@/components/icons/FailIcon.vue";
 import SuccessIcon from "@/components/icons/SuccessIcon.vue";
-import StandardButton from "@/components/StandardButton.vue";
-import {ref} from "vue";
+import {
+  STATE_CLOSED,
+  STATE_OPENED,
+  STATUS_FAILED,
+  STATUS_PENDING,
+  STATUS_SUCCESS
+} from "@/constants.js";
+
 const {
   number,
   word,
@@ -24,17 +30,19 @@ const {
   },
   status: {
     type: String,
-    default: 'pending',
+    default: STATUS_PENDING,
   },
   state: {
     type: String,
-    default: 'closed',
+    default: STATE_CLOSED,
   },
 })
 const emit = defineEmits(['flip', 'change-status'])
+
 function flip() {
   emit('flip', word)
 }
+
 function changeStatus(status) {
   emit('change-status', word, status)
 }
@@ -43,19 +51,27 @@ function changeStatus(status) {
 <template>
   <div class="card">
     <div class="card__number">{{ number }}</div>
-    <div v-if="status === 'failed' || status === 'success'" class="card__status large">
-      <fail-icon v-if="status === 'failed'" class="large" />
-      <success-icon v-else class="large" />
+    <div v-if="status === STATUS_FAILED || status === STATUS_SUCCESS" class="card__status large">
+      <fail-icon v-if="status === STATUS_FAILED" class="large"/>
+      <success-icon v-else class="large"/>
     </div>
     <div class="card__body">
-      <div class="card-body__word">{{ state === 'closed' ? word : translation }}</div>
+      <div class="card-body__word">{{ state === STATE_CLOSED ? word : translation }}</div>
     </div>
     <div class="card__actions">
-      <button v-if="state === 'closed'" class="card__actions__flip" @click="flip">Перевернуть</button>
-      <button v-else-if="state === 'opened' && (status === 'failed' || status === 'success')" class="card__actions__finished">Завершено</button>
+      <button v-if="state === STATE_CLOSED" class="card__actions__flip" @click="flip">Перевернуть
+      </button>
+      <button
+        v-else-if="state === STATE_OPENED && (status === STATUS_FAILED || status === STATUS_SUCCESS)"
+        class="card__actions__finished">Завершено
+      </button>
       <div v-else class="card__actions__change-status">
-        <button><fail-icon @click="changeStatus('failed')" /></button>
-        <button><success-icon @click="changeStatus('success')" /></button>
+        <button>
+          <fail-icon @click="changeStatus(STATUS_FAILED)"/>
+        </button>
+        <button>
+          <success-icon @click="changeStatus(STATUS_SUCCESS)"/>
+        </button>
       </div>
     </div>
   </div>
@@ -74,6 +90,7 @@ function changeStatus(status) {
   display: flex;
   flex-direction: column;
 }
+
 .card__number {
   z-index: 1;
   position: absolute;
@@ -88,6 +105,7 @@ function changeStatus(status) {
   color: var(--color-black);
   background: var(--color-white);
 }
+
 .card__status {
   display: flex;
   justify-content: center;
@@ -96,6 +114,7 @@ function changeStatus(status) {
   background: var(--color-white);
   z-index: 1;
 }
+
 .card__body {
   border: 1px solid var(--color-primary-light);
   border-radius: 12px;
@@ -107,6 +126,7 @@ function changeStatus(status) {
   width: 100%;
   height: 100%;
 }
+
 .card-body__word {
   color: var(--color-black);
   font-family: var(--font);
@@ -117,6 +137,7 @@ function changeStatus(status) {
   text-align: center;
   text-transform: lowercase;
 }
+
 .card__actions {
   background-color: var(--color-white);
   display: flex;
@@ -125,6 +146,7 @@ function changeStatus(status) {
   bottom: 12px;
   height: 30px;
 }
+
 .card__actions__flip, .card__actions__finished {
   background: none;
   border: none;
@@ -136,9 +158,11 @@ function changeStatus(status) {
   text-transform: uppercase;
   cursor: pointer;
 }
+
 .card__actions__finished {
   cursor: context-menu;
 }
+
 .card__actions__change-status {
   display: flex;
   flex-direction: row;
@@ -146,6 +170,7 @@ function changeStatus(status) {
   align-items: center;
   gap: 32px;
 }
+
 .card__actions__change-status button {
   border: 0;
   background: none;

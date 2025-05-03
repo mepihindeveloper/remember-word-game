@@ -2,9 +2,14 @@
 import StandardButton from '@/components/StandardButton.vue'
 import Score from "@/components/Score.vue";
 import Card from "@/components/Card.vue";
-import {onMounted, ref} from "vue";
-
-const API_ENDPOINT = 'http://localhost:8080/api'
+import {ref} from "vue";
+import {
+  API_ENDPOINT,
+  STATE_CLOSED,
+  STATE_OPENED,
+  STATUS_FAILED,
+  STATUS_PENDING
+} from "@/constants.js";
 
 const scorePoints = ref(100);
 const data = ref([])
@@ -14,15 +19,21 @@ function onFlip(word) {
     if (card.word !== word) {
       continue;
     }
-    card.state = card.state === 'closed' ? 'opened' : 'closed';
+    card.state = card.state === STATE_CLOSED ? STATE_OPENED : STATE_CLOSED;
   }
 }
+
 function onChangeStatus(word, status) {
+  let isWordFound = false;
   for (const card of data.value) {
     if (card.word !== word) {
       continue;
     }
     card.status = status;
+    isWordFound = true
+  }
+  if (isWordFound) {
+    scorePoints.value = status === STATUS_FAILED ? scorePoints.value - 4 : scorePoints.value + 10;
   }
 }
 
@@ -41,8 +52,8 @@ async function getData() {
   for (const [key, value] of Object.entries(data.value)) {
     let number = parseInt(key) + 1;
     value.number = key < 10 ? `0${number}` : number
-    value.state = 'closed'
-    value.status = 'pending'
+    value.state = STATE_CLOSED
+    value.status = STATUS_PENDING
   }
 }
 </script>
@@ -50,7 +61,7 @@ async function getData() {
 <template>
   <header class="header">
     <h1 class="title">Запомни слово</h1>
-    <score v-bind:score="scorePoints" />
+    <score v-bind:score="scorePoints"/>
   </header>
   <main class="main">
     <div v-if="data.length" class="cards">
@@ -76,6 +87,7 @@ async function getData() {
   align-items: center;
   padding: 49px 66px;
 }
+
 .title {
   font-family: var(--font);
   font-weight: 700;
@@ -84,6 +96,7 @@ async function getData() {
   text-transform: uppercase;
   color: var(--color-black-light);
 }
+
 .main {
   display: flex;
   align-items: center;
@@ -93,6 +106,7 @@ async function getData() {
   padding-top: 49px;
   padding-bottom: 65px;
 }
+
 .cards {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
