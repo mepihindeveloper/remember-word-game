@@ -2,17 +2,27 @@
 import StandardButton from '@/components/StandardButton.vue'
 import Score from "@/components/Score.vue";
 import Card from "@/components/Card.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {
-  API_ENDPOINT,
+  API_ENDPOINT, DEFAULT_SCORE,
   STATE_CLOSED,
   STATE_OPENED,
   STATUS_FAILED,
   STATUS_PENDING
 } from "@/constants.js";
+import Loader from "@/Loader.vue";
 
-const scorePoints = ref(100);
+const scorePoints = ref(DEFAULT_SCORE);
 const data = ref([])
+const loading = ref(false)
+
+watch(scorePoints, () => {
+  if (scorePoints.value <= 0) {
+    alert('Провал')
+    data.value = []
+    scorePoints.value = DEFAULT_SCORE
+  }
+})
 
 function onFlip(word) {
   for (const card of data.value) {
@@ -40,13 +50,15 @@ function onChangeStatus(word, status) {
   }
 }
 
-function start() {
-  getData()
-  scorePoints.value = 100;
+async function start() {
+  loading.value = true
+  await getData()
+  scorePoints.value = DEFAULT_SCORE;
+  loading.value = false
 }
 
 async function getData() {
-  const response = await fetch(`${API_ENDPOINT}/random-words`)
+  const response = await fetch(`${API_ENDPOINT}/`)
   if (response.status !== 200) {
     data.value = [];
     return
@@ -54,7 +66,7 @@ async function getData() {
   data.value = await response.json()
   for (const [key, value] of Object.entries(data.value)) {
     let number = parseInt(key) + 1;
-    value.number = parseInt(key) < 10 ? `0${number}` : number
+    value.number = parseInt(key) < 10 ? `0${number}` : `${number}`
     value.state = STATE_CLOSED
     value.status = STATUS_PENDING
   }
@@ -66,18 +78,22 @@ async function getData() {
     <h1 class="title">Запомни слово</h1>
     <score v-bind:score="scorePoints"/>
   </header>
+
   <main class="main">
-    <div v-if="data.length" class="cards">
-      <card
-        v-for="card in data"
-        :key="card.word"
-        v-bind="card"
-        @flip="onFlip"
-        @change-status="onChangeStatus"
-      />
-    </div>
-    <standard-button v-if="!data.length" @click="start">Начать игру</standard-button>
-    <standard-button v-else @click="start">Начать заново</standard-button>
+    <loader v-if="loading"/>
+    <template v-else>
+      <div v-if="data.length" class="cards">
+        <card
+          v-for="card in data"
+          :key="card.word"
+          v-bind="card"
+          @flip="onFlip"
+          @change-status="onChangeStatus"
+        />
+      </div>
+      <standard-button v-if="!data.length" @click="start">Начать игру</standard-button>
+      <standard-button v-else @click="start">Начать заново</standard-button>
+    </template>
   </main>
 
 </template>

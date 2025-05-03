@@ -1,6 +1,7 @@
-export const API_ENDPOINT = String('http://localhost:8080/api')
+export const API_ENDPOINT = String(import.meta.env.VITE_API_ENDPOINT)
 export const STATUS_FAILED = String('failed')
 export const STATUS_SUCCESS = String('success')
 export const STATUS_PENDING = String('pending')
 export const STATE_OPENED = String('opened')
 export const STATE_CLOSED = String('closed')
+export const DEFAULT_SCORE = Number(100)

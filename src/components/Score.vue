@@ -1,10 +1,11 @@
 <script setup>
 import HeartIcon from "@/components/icons/HeartIcon.vue";
+import {DEFAULT_SCORE} from "@/constants.js";
 
 const { score } = defineProps({
   score: {
     type: Number,
-    default: 100,
+    default: DEFAULT_SCORE,
   },
 })
 </script>
