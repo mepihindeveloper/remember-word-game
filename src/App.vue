@@ -29,6 +29,9 @@ function onChangeStatus(word, status) {
     if (card.word !== word) {
       continue;
     }
+    if (card.status !== STATUS_PENDING) {
+      continue;
+    }
     card.status = status;
     isWordFound = true
   }
@@ -51,7 +54,7 @@ async function getData() {
   data.value = await response.json()
   for (const [key, value] of Object.entries(data.value)) {
     let number = parseInt(key) + 1;
-    value.number = key < 10 ? `0${number}` : number
+    value.number = parseInt(key) < 10 ? `0${number}` : number
     value.state = STATE_CLOSED
     value.status = STATUS_PENDING
   }
